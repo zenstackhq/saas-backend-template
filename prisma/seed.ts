@@ -8,7 +8,7 @@ const userData: Prisma.UserCreateInput[] = [
         id: "robin@prisma.io",
         name: "Robin",
         email: "robin@prisma.io",
-        teams: {
+        orgs: {
             create: [
                 {
                     id: "prisma",
@@ -21,7 +21,7 @@ const userData: Prisma.UserCreateInput[] = [
                 {
                     id: "community",
                     name: "community",
-                    teamId: "prisma",
+                    orgId: "prisma",
                 },
             ],
         },
@@ -31,7 +31,7 @@ const userData: Prisma.UserCreateInput[] = [
                     id: "slack",
                     title: "Join the Prisma Slack",
                     content: "https://slack.prisma.io",
-                    teamId: "prisma",
+                    orgId: "prisma",
                 },
             ],
         },
@@ -40,7 +40,7 @@ const userData: Prisma.UserCreateInput[] = [
         id: "bryan@prisma.io",
         name: "Bryan",
         email: "bryan@prisma.io",
-        teams: {
+        orgs: {
             connect: {
                 id: "prisma",
             },
@@ -51,7 +51,7 @@ const userData: Prisma.UserCreateInput[] = [
                     id: "discord",
                     title: "Join the Prisma Discord",
                     content: "https://discord.gg/jS3XY7vp46",
-                    teamId: "prisma",
+                    orgId: "prisma",
                     groups: {
                         connect: {
                             id: "community",
@@ -65,7 +65,7 @@ const userData: Prisma.UserCreateInput[] = [
         id: "gavin@prisma.io",
         name: "Gavin",
         email: "gavin@prisma.io",
-        teams: {
+        orgs: {
             connect: {
                 id: "prisma",
             },
@@ -77,7 +77,7 @@ const userData: Prisma.UserCreateInput[] = [
                     title: "Follow Prisma on Twitter",
                     content: "https://twitter.com/prisma",
                     isPublic: true,
-                    teamId: "prisma",
+                    orgId: "prisma",
                 },
             ],
         },
@@ -87,7 +87,7 @@ const userData: Prisma.UserCreateInput[] = [
         id: "js@zenstack.dev",
         name: "JS",
         email: "js@zenstack.dev",
-        teams: {
+        orgs: {
             create: [
                 {
                     id: "zenstack",

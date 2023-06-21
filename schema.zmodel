@@ -14,38 +14,38 @@ model User {
     email String @unique
     password String? @password @omit
     name String?
-    teams Team[]
+    orgs Organization[]
     posts Post[]
     groups Group[]
 
     // can be created by anyone, even not logged in
     @@allow('create', true)
-    // can be read by users sharing any team
-    @@allow('read', teams?[members?[auth() == this]])
+    // can be read by users in the same organization
+    @@allow('read', orgs?[members?[auth() == this]])
     // full access by oneself
     @@allow('all', auth() == this)
 }
 
 /**
- * Model for a team 
+ * Model for a organization 
  */
-model Team {
+model Organization {
     id String @id @default(uuid())
     name String
     members User[]
     post Post[]
     groups Group[]
 
-    // everyone can create a team
+    // everyone can create a organization
     @@allow('create', true)
-    // any user in the team can read the team
+    // any user in the organization can read the organization
     @@allow('read', members?[auth() == this])
 }
 
 /**
-* Base model for all entites in a team
+* Base model for all entites in a organization
 */
-abstract model TeamBaseEntity {
+abstract model organizationBaseEntity {
     id String @id @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -53,20 +53,20 @@ abstract model TeamBaseEntity {
     isPublic Boolean @default(false)
     owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
     ownerId String
-    team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
-    teamId String
+    org Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+    orgId String
     groups Group[]
 
-    // when create, owner must be set to current user, and user must be in the team
-    @@allow('create', owner == auth() && team.members?[this == auth()])
+    // when create, owner must be set to current user, and user must be in the organization
+    @@allow('create', owner == auth() && org.members?[this == auth()])
     // only the owner can update it and is not allowed to change the owner
-    @@allow('update', owner == auth() && team.members?[this == auth()] && future().owner == owner)
+    @@allow('update', owner == auth() && org.members?[this == auth()] && future().owner == owner)
     // allow owner to read
     @@allow('read', owner == auth())
     // allow shared group members to read it
     @@allow('read', groups?[users?[this == auth()]])
-    // allow team to access if public
-    @@allow('read', isPublic && team.members?[this == auth()])
+    // allow organization to access if public
+    @@allow('read', isPublic && org.members?[this == auth()])
     // can not be read if deleted
     @@deny('all', isDeleted == true)
 }
@@ -74,7 +74,7 @@ abstract model TeamBaseEntity {
 /**
 * Model for a post
 */
-model Post extends TeamBaseEntity {
+model Post extends organizationBaseEntity {
     title String
     content String
 }
@@ -87,9 +87,9 @@ model Group {
     name String
     users User[]
     posts Post[]
-    team Team @relation(fields: [teamId], references: [id])
-    teamId String
+    org Organization @relation(fields: [orgId], references: [id])
+    orgId String
 
-    // group is shared by team
-    @@allow('all', team.members?[auth() == this])
+    // group is shared by organization
+    @@allow('all', org.members?[auth() == this])
 }
