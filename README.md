@@ -37,5 +37,5 @@ npm run dev
 5. test
 
 ```bash
-curl -H "X-USER-ID:alice@prisma.io" localhost:3000/post
+curl -H "X-USER-ID:alice@prisma.io" localhost:3000/api/post
 ```
