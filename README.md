@@ -11,7 +11,7 @@ SaaS Backend Template using express.js
 ## Data Model
 
 In `schema.zmodel,` there are 4 models, and their relationships are as below:
-![data model](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/k9ajjn5eh3ekl2qviepg.png)
+![data model](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/8dx12h1fiumotwhhxr7z.png)
 
 -   Organization is the top-level tenant. Any instance of User, post, and group belong to an organization.
 -   One user could belong to multiple organizations and groups
