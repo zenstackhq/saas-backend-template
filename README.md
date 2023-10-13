@@ -1,3 +1,6 @@
+# Please ⭐ us on the ZenStack repo if you like 🤝
+https://github.com/zenstackhq/zenstack
+
 # ZenStack SaaS Backend Template
 
 SaaS Backend Template using express.js
