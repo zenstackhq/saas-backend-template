@@ -1,28 +1,28 @@
-import { PrismaClient } from "@prisma/client";
-import { withPresets } from "@zenstackhq/runtime";
-import { ZenStackMiddleware } from "@zenstackhq/server/express";
-import express, { Request } from "express";
-import RestApiHandler from "@zenstackhq/server/api/rest";
+import { PrismaClient } from '@prisma/client';
+import { enhance } from '@zenstackhq/runtime';
+import { ZenStackMiddleware } from '@zenstackhq/server/express';
+import express from 'express';
+import { RestApiHandler } from '@zenstackhq/server/api';
 
 const app = express();
 
 app.use(express.json());
 const prisma = new PrismaClient();
 app.use(
-    "/api",
+    '/api',
     ZenStackMiddleware({
         getPrisma: (req) =>
-            withPresets(prisma, {
-                user: { id: req.header("X-USER-ID") },
+            enhance(prisma, {
+                user: { id: req.header('X-USER-ID')! },
             }),
-        handler: RestApiHandler({ endpoint: "http://localhost:3000/api" }),
+        handler: RestApiHandler({ endpoint: 'http://localhost:3000/api' }),
     })
 );
 
 app.use((req, res, next) => {
-    const userId = req.header("X-USER-ID");
+    const userId = req.header('X-USER-ID');
     if (!userId) {
-        res.status(403).json({ error: "unauthorized" });
+        res.status(403).json({ error: 'unauthorized' });
     } else {
         next();
     }
