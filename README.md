@@ -1,4 +1,5 @@
 # Please ⭐ us on the ZenStack repo if you like 🤝
+
 https://github.com/zenstackhq/zenstack
 
 # ZenStack SaaS Backend Template
@@ -27,20 +28,22 @@ Let’s take a look at all the permissions of the Post and how they could be exp
 💡 _You can find the detailed reference of access policies syntax below:
 [https://zenstack.dev/docs/reference/zmodel-language#access-policy](https://zenstack.dev/docs/reference/zmodel-language#access-policy)_
 
-
 -   Create
-    
+
 the owner must be set to the current user, and the organization must be set to one that the current user belongs to.
+
 ```tsx
-@@allow('create', owner == auth() && org.members?[this == auth()])
+@@allow('create', owner == auth() && org.members?[id == auth().id])
 ```
+
 -   Update
 
     only the owner can update it and is not allowed to change the organization or owner
 
     ```tsx
-    @@allow('update', owner == auth() && org.future().members?[this == auth()] && future().owner == owner)
+    @@allow('update', owner == auth() && org.future().members?[id == auth().id] && future().owner == owner)
     ```
+
 -   Read
 
     -   allow the owner to read
@@ -49,12 +52,13 @@ the owner must be set to the current user, and the organization must be set to o
         ```
     -   allow the member of the organization to read it if it’s public
         ```tsx
-        @@allow('read', isPublic && org.members?[this == auth()])
+        @@allow('read', isPublic && org.members?[id == auth().id])
         ```
     -   allow the group members to read it
         ```tsx
         @@allow('read', groups?[users?[id == auth().id]])
         ```
+
 -   Delete
 
     -   don’t allow delete
@@ -80,15 +84,15 @@ abstract model organizationBaseEntity {
     groups Group[]
 
     // when create, owner must be set to current user, and user must be in the organization
-    @@allow('create', owner == auth() && org.members?[this == auth()])
+    @@allow('create', owner == auth() && org.members?[id == auth().id])
     // only the owner can update it and is not allowed to change the owner
-    @@allow('update', owner == auth() && org.members?[this == auth()] && future().owner == owner)
+    @@allow('update', owner == auth() && org.members?[id == auth().id] && future().owner == owner)
     // allow owner to read
     @@allow('read', owner == auth())
     // allow shared group members to read it
-    @@allow('read', groups?[users?[this == auth()]])
+    @@allow('read', groups?[users?[id == auth().id]])
     // allow organization to access if public
-    @@allow('read', isPublic && org.members?[this == auth()])
+    @@allow('read', isPublic && org.members?[id == auth().id])
     // can not be read if deleted
     @@deny('all', isDeleted == true)
 }
@@ -115,7 +119,7 @@ model ToDo extends organizationBaseEntity {
 All the multi-tenant, soft delete and sharing features will just work automatically. Additionally, if any specialized access control logic is required for **`ToDo`**, such as allowing shared individuals to update it, you can effortlessly add the corresponding policy rule within the **`ToDo`** model without concerns about breaking existing functionality:
 
 ```tsx
-@@allow('update', groups?[users?[this== auth()]] )
+@@allow('update', groups?[users?[id == auth().id]] )
 ```
 
 ## Running
@@ -145,6 +149,7 @@ npm run dev
 ```
 
 ## Testing
+
 The seed data is like below:
 
 ![data](https://github.com/jiashengguo/my-blog-app/assets/16688722/6dfb2e8c-d1c3-4eec-8022-e03bf2dd42fd)
